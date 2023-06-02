@@ -29,12 +29,12 @@ def decision_tree_builder(dataset):
     x = dataset[:, 0:10]
     y = dataset[:, 10]
     le_list = []  # List to store individual label encoders
-
+    le = preprocessing.LabelEncoder()
+    
     for i in range(10):
-        le = preprocessing.LabelEncoder()
         x[:, i] = le.fit_transform(x[:, i])
-        le_list.append(le)
-
+        
+    le_list.append(le)
     le_y = preprocessing.LabelEncoder()
     y = le_y.fit_transform(y)
 
