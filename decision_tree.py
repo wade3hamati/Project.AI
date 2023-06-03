@@ -3,8 +3,9 @@ import numpy as np
 import csv
 from sklearn import tree
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-
 
 def read_csv_to_nparray(file_name):
     # Initialize an empty list to store the data
@@ -38,8 +39,14 @@ def decision_tree_builder(dataset):
     le_y = preprocessing.LabelEncoder()
     y = le_y.fit_transform(y)
 
-    dtc = tree.DecisionTreeClassifier(criterion="entropy", splitter="best")
+    # First Tree
+    dtc = tree.DecisionTreeClassifier(criterion="entropy", splitter="best") # entropy calculation + splitting criteria
     dtc.fit(x, y)
+
+    # Second Tree
+    dtc1 = tree.DecisionTreeClassifier(criterion="entropy", splitter="best") # entropy calculation + splitting criteria
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0) 
+    dtc1.fit(x_train, y_train)
 
     fig, ax = plt.subplots(figsize=(10, 10))
     # Increase fontsize value as needed
@@ -62,10 +69,13 @@ def decision_tree_builder(dataset):
     predicted_output = le_y.inverse_transform(y_pred)
     print("Predicted output: ", predicted_output)
 
+    # Confusion Matrix from 2nd Tree 
+    y_pred1 = dtc1.predict(x_test)
+    print("Confusion Matrix:", classification_report(y_test, y_pred1))
+
 
 # Call the decision_tree_builder function
 print("Decision Tree Builder")
 file_name = input("Enter dataset file: ")
 dataset = read_csv_to_nparray(file_name)
 decision_tree_builder(dataset)
-
